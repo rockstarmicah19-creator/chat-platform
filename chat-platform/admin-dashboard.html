@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatHub Admin - Dashboard</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-page">
+    <div class="admin-container">
+        <!-- Admin Sidebar Navigation -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>ChatHub Admin</span>
+            </div>
+
+            <nav class="admin-nav">
+                <a href="admin-dashboard.html" class="nav-item active">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="admin-users.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+                <a href="admin-servers.html" class="nav-item">
+                    <i class="fas fa-server"></i>
+                    <span>Servers</span>
+                </a>
+                <a href="admin-channels.html" class="nav-item">
+                    <i class="fas fa-hashtag"></i>
+                    <span>Channels</span>
+                </a>
+                <a href="admin-reports.html" class="nav-item">
+                    <i class="fas fa-flag"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="admin-moderation.html" class="nav-item">
+                    <i class="fas fa-gavel"></i>
+                    <span>Moderation</span>
+                </a>
+                <a href="admin-analytics.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="admin-storage.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>Storage</span>
+                </a>
+                <a href="admin-audit-logs.html" class="nav-item">
+                    <i class="fas fa-history"></i>
+                    <span>Audit Logs</span>
+                </a>
+                <a href="admin-settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="admin-sidebar-footer">
+                <a href="app.html" title="Go to Chat">
+                    <button class="btn-icon" style="color: var(--success);">
+                        <i class="fas fa-comments"></i>
+                    </button>
+                </a>
+                <button id="themeBtn" class="btn-icon" title="Change Theme">
+                    <i class="fas fa-palette"></i>
+                </button>
+                <button class="btn-icon" title="Logout" onclick="handleLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Admin Content -->
+        <main class="admin-main">
+            <!-- Admin Header -->
+            <div class="admin-header">
+                <div class="header-left">
+                    <h1>Dashboard</h1>
+                    <p>Welcome back, Admin! Here's an overview of your platform.</p>
+                </div>
+                <div class="header-right">
+                    <div class="date-time">
+                        <i class="fas fa-calendar"></i>
+                        <span id="dateTime">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(88, 101, 242, 0.1); color: #5865F2;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Users</p>
+                        <h3 class="stat-value" id="totalUsers">1,234</h3>
+                        <p class="stat-change" style="color: #57F287;">
+                            <i class="fas fa-arrow-up"></i> 5.2% from last month
+                        </p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(87, 242, 135, 0.1); color: #57F287;">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Active Servers</p>
+                        <h3 class="stat-value" id="activeServers">456</h3>
+                        <p class="stat-change" style="color: #57F287;">
+                            <i class="fas fa-arrow-up"></i> 8 new servers
+                        </p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(0, 176, 244, 0.1); color: #00B0F4;">
+                        <i class="fas fa-messages"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Messages Today</p>
+                        <h3 class="stat-value" id="messagesToday">89.2K</h3>
+                        <p class="stat-change" style="color: #57F287;">
+                            <i class="fas fa-arrow-up"></i> 12% increase
+                        </p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(237, 66, 69, 0.1); color: #ED4245;">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Open Reports</p>
+                        <h3 class="stat-value" id="openReports">23</h3>
+                        <p class="stat-change" style="color: #FFA500;">
+                            <i class="fas fa-exclamation"></i> Needs attention
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Charts Section -->
+            <div class="dashboard-grid">
+                <!-- Activity Chart -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>User Activity (Last 7 Days)</h2>
+                        <div class="card-actions">
+                            <button class="btn-icon-small">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-chart">
+                            <div class="chart-bar" style="height: 75%; background: var(--primary);">
+                                <span class="chart-label">Mon</span>
+                            </div>
+                            <div class="chart-bar" style="height: 85%; background: var(--primary);">
+                                <span class="chart-label">Tue</span>
+                            </div>
+                            <div class="chart-bar" style="height: 65%; background: var(--primary);">
+                                <span class="chart-label">Wed</span>
+                            </div>
+                            <div class="chart-bar" style="height: 90%; background: var(--primary);">
+                                <span class="chart-label">Thu</span>
+                            </div>
+                            <div class="chart-bar" style="height: 80%; background: var(--primary);">
+                                <span class="chart-label">Fri</span>
+                            </div>
+                            <div class="chart-bar" style="height: 70%; background: var(--primary);">
+                                <span class="chart-label">Sat</span>
+                            </div>
+                            <div class="chart-bar" style="height: 95%; background: var(--primary);">
+                                <span class="chart-label">Sun</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Recent Activity</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-feed">
+                            <div class="activity-item">
+                                <i class="fas fa-user-plus" style="color: #57F287;"></i>
+                                <div>
+                                    <strong>New user registered:</strong> John Doe
+                                    <p style="font-size: 0.85rem; color: var(--text-tertiary);">2 minutes ago</p>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <i class="fas fa-server" style="color: #00B0F4;"></i>
+                                <div>
+                                    <strong>New server created:</strong> Tech Community
+                                    <p style="font-size: 0.85rem; color: var(--text-tertiary);">15 minutes ago</p>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <i class="fas fa-flag" style="color: #FFA500;"></i>
+                                <div>
+                                    <strong>Report submitted:</strong> Inappropriate content
+                                    <p style="font-size: 0.85rem; color: var(--text-tertiary);">1 hour ago</p>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <i class="fas fa-ban" style="color: #ED4245;"></i>
+                                <div>
+                                    <strong>User banned:</strong> Spam account
+                                    <p style="font-size: 0.85rem; color: var(--text-tertiary);">3 hours ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Health -->
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <h2>System Health</h2>
+                </div>
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Server CPU</span>
+                                <strong>45%</strong>
+                            </div>
+                            <div style="background: var(--bg-tertiary); border-radius: 8px; height: 8px; overflow: hidden;">
+                                <div style="background: #57F287; height: 100%; width: 45%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Memory Usage</span>
+                                <strong>62%</strong>
+                            </div>
+                            <div style="background: var(--bg-tertiary); border-radius: 8px; height: 8px; overflow: hidden;">
+                                <div style="background: #FFA500; height: 100%; width: 62%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Database</span>
+                                <strong>38%</strong>
+                            </div>
+                            <div style="background: var(--bg-tertiary); border-radius: 8px; height: 8px; overflow: hidden;">
+                                <div style="background: #5865F2; height: 100%; width: 38%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Theme Selector Modal -->
+    <div id="themeModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>🎨 Choose Theme</h2>
+                <button class="btn-close">&times;</button>
+            </div>
+            <div id="themeGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px; max-height: 500px; overflow-y: auto;">
+                <!-- Themes populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/firebase.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/theme.js"></script>
+    <script type="module">
+        import { initThemes, getAvailableThemes, applyTheme } from './js/theme.js';
+        
+        // Initialize themes
+        initThemes();
+        
+        // Update date/time
+        function updateDateTime() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            document.getElementById('dateTime').textContent = now.toLocaleDateString('en-US', options);
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 60000);
+        
+        // Theme functionality
+        const themeBtn = document.getElementById('themeBtn');
+        const themeModal = document.getElementById('themeModal');
+        const themeGrid = document.getElementById('themeGrid');
+        
+        if (themeBtn && themeModal) {
+            themeBtn.addEventListener('click', () => {
+                themeModal.classList.add('active');
+                populateThemes();
+            });
+            
+            const closeBtn = themeModal.querySelector('.btn-close');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    themeModal.classList.remove('active');
+                });
+            }
+            
+            themeModal.addEventListener('click', (e) => {
+                if (e.target === themeModal) {
+                    themeModal.classList.remove('active');
+                }
+            });
+        }
+        
+        function populateThemes() {
+            const themes = getAvailableThemes();
+            themeGrid.innerHTML = '';
+            
+            Object.entries(themes).forEach(([themeKey, themeName]) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = themeName;
+                btn.style.cssText = `
+                    padding: 12px;
+                    border: 2px solid transparent;
+                    border-radius: 6px;
+                    background: var(--bg-secondary);
+                    color: var(--text-primary);
+                    cursor: pointer;
+                    font-size: 0.9rem;
+                    transition: all 0.3s ease;
+                    font-weight: 500;
+                `;
+                
+                btn.addEventListener('mouseover', () => {
+                    btn.style.borderColor = 'var(--primary)';
+                    btn.style.boxShadow = '0 0 15px rgba(0, 0, 0, 0.3)';
+                });
+                
+                btn.addEventListener('mouseout', () => {
+                    btn.style.borderColor = 'transparent';
+                    btn.style.boxShadow = 'none';
+                });
+                
+                btn.addEventListener('click', () => {
+                    applyTheme(themeKey);
+                    themeModal.classList.remove('active');
+                });
+                
+                themeGrid.appendChild(btn);
+            });
+        }
+        
+        async function handleLogout() {
+            try {
+                // Import logout function
+                const { handleLogout: logout } = await import('./js/auth.js');
+                logout();
+            } catch (e) {
+                console.error('Logout error:', e);
+                localStorage.removeItem('user');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

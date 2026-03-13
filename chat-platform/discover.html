@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatHub - Discover Servers</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="app-page">
+    <div class="app-container">
+        <!-- Left Sidebar - Navigation -->
+        <aside class="sidebar-servers" style="width: 72px;">
+            <div class="servers-header">
+                <a href="app.html" class="btn-icon" title="Back to Chat">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="servers-list">
+                <a href="profile.html" class="server-item" title="My Profile">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="messages.html" class="server-item" title="Direct Messages">
+                    <i class="fas fa-comments"></i>
+                </a>
+                <a href="settings.html" class="server-item" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </a>
+                <a href="discover.html" class="server-item active" title="Discover Servers">
+                    <i class="fas fa-compass"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="chat-main" style="flex: 1; background: var(--bg-primary);">
+            <!-- Header -->
+            <div class="chat-header" style="display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-lg); border-bottom: 1px solid var(--border-color);">
+                <div class="header-left">
+                    <h2>Discover Servers</h2>
+                    <p style="color: var(--text-tertiary); font-size: 0.9rem;">Find and join communities</p>
+                </div>
+                <div class="header-right">
+                    <button id="themeBtn" class="btn-icon" title="Change Theme">
+                        <i class="fas fa-palette"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="messages-container" style="padding: var(--spacing-lg); background: var(--bg-primary); overflow-y: auto;">
+                <!-- Search and Filters -->
+                <div style="max-width: 1200px;">
+                    <div style="margin-bottom: var(--spacing-lg); display: flex; gap: var(--spacing-md); flex-wrap: wrap;">
+                        <input type="text" id="serverSearch" placeholder="Search for servers..." class="input-enhanced" style="flex: 1; min-width: 250px;">
+                        <select id="categoryFilter" class="input-enhanced" style="width: 200px; padding: var(--spacing-md);">
+                            <option value="">All Categories</option>
+                            <option value="gaming">Gaming</option>
+                            <option value="study">Study & Learning</option>
+                            <option value="creative">Creative & Arts</option>
+                            <option value="social">Social & Hangout</option>
+                            <option value="music">Music</option>
+                        </select>
+                    </div>
+
+                    <!-- Featured Servers -->
+                    <div style="margin-bottom: var(--spacing-xl);">
+                        <h3 style="margin-bottom: var(--spacing-lg); color: var(--primary);">
+                            <i class="fas fa-star"></i> Featured Servers
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--spacing-lg);" id="featuredServers">
+                            <!-- Featured servers loaded by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Trending Servers -->
+                    <div style="margin-bottom: var(--spacing-xl);">
+                        <h3 style="margin-bottom: var(--spacing-lg); color: var(--success);">
+                            <i class="fas fa-fire"></i> Trending This Week
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--spacing-lg);" id="trendingServers">
+                            <!-- Trending servers loaded by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Recommended Servers -->
+                    <div>
+                        <h3 style="margin-bottom: var(--spacing-lg); color: var(--info);">
+                            <i class="fas fa-lightbulb"></i> Recommended For You
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--spacing-lg);" id="recommendedServers">
+                            <!-- Recommended servers loaded by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Theme Modal -->
+    <div id="themeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Select Theme</h2>
+                <button class="btn-close" onclick="closeModal('themeModal')">&times;</button>
+            </div>
+            <div style="padding: var(--spacing-lg); display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--spacing-md); max-height: 400px; overflow-y: auto;" id="themeGrid">
+                <!-- Themes populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Server Details Modal -->
+    <div id="serverModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Server Information</h2>
+                <button class="btn-close" onclick="closeModal('serverModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; margin-bottom: var(--spacing-lg);">
+                    <div style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
+                        <span id="modalServerIcon">G</span>
+                    </div>
+                    <h3 id="modalServerName" style="margin: 0; margin-bottom: 8px; font-size: 1.3rem;">Server Name</h3>
+                    <p id="modalServerDesc" style="color: var(--text-secondary); margin: 0; margin-bottom: 12px;">Server description goes here</p>
+                    <div style="display: flex; gap: 16px; justify-content: center; margin-bottom: var(--spacing-lg);">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);" id="modalMemberCount">1.2K</div>
+                            <div style="font-size: 0.85rem; color: var(--text-tertiary);">Members</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);" id="modalChannelCount">45</div>
+                            <div style="font-size: 0.85rem; color: var(--text-tertiary);">Channels</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--info);">12</div>
+                            <div style="font-size: 0.85rem; color: var(--text-tertiary);">Days Old</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-secondary); border-radius: 8px; padding: var(--spacing-md); margin-bottom: var(--spacing-lg);">
+                    <p style="margin: 0; font-size: 0.9rem; margin-bottom: 12px;"><strong>Owner:</strong> <span id="modalOwner">Admin User</span></p>
+                    <p style="margin: 0; font-size: 0.9rem; margin-bottom: 12px;"><strong>Category:</strong> <span id="modalCategory">Gaming</span></p>
+                    <p style="margin: 0; font-size: 0.9rem;"><strong>Created:</strong> <span id="modalCreated">Jan 15, 2024</span></p>
+                </div>
+
+                <div style="display: flex; gap: var(--spacing-md);">
+                    <button class="btn-primary" onclick="joinServer()" style="flex: 1;">
+                        <i class="fas fa-sign-in-alt"></i> Join Server
+                    </button>
+                    <button class="btn-secondary" onclick="closeModal('serverModal')" style="flex: 1;">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script>
+        const servers = [
+            {
+                id: 1,
+                name: 'Gaming Hub',
+                icon: 'G',
+                category: 'gaming',
+                members: 1200,
+                channels: 45,
+                description: 'The ultimate gaming community! Play games, share clips, and make gaming friends.',
+                owner: 'GameMaster',
+                trending: true,
+                featured: true
+            },
+            {
+                id: 2,
+                name: 'Study Group',
+                icon: 'S',
+                category: 'study',
+                members: 800,
+                channels: 30,
+                description: 'A place for students to collaborate and study together.',
+                owner: 'Professor',
+                trending: false,
+                featured: false
+            },
+            {
+                id: 3,
+                name: 'Art Community',
+                icon: 'A',
+                category: 'creative',
+                members: 650,
+                channels: 28,
+                description: 'Showcase your art, get feedback, and connect with other artists.',
+                owner: 'ArtMaster',
+                trending: true,
+                featured: true
+            },
+            {
+                id: 4,
+                name: 'Music Central',
+                icon: 'M',
+                category: 'music',
+                members: 950,
+                channels: 52,
+                description: 'Discuss music, share playlists, and jam together.',
+                owner: 'DJ Cool',
+                trending: true,
+                featured: false
+            },
+            {
+                id: 5,
+                name: 'Social Hangout',
+                icon: 'C',
+                category: 'social',
+                members: 2100,
+                channels: 65,
+                description: 'Just a fun place to hang out and chat with people.',
+                owner: 'Community Manager',
+                trending: false,
+                featured: true
+            },
+            {
+                id: 6,
+                name: 'Tech Talk',
+                icon: 'T',
+                category: 'study',
+                members: 1500,
+                channels: 40,
+                description: 'Discuss technology, programming, and the latest tech news.',
+                owner: 'TechLead',
+                trending: true,
+                featured: false
+            }
+        ];
+
+        // Create server card HTML
+        function createServerCard(server) {
+            return `
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: var(--spacing-lg); transition: all 0.3s ease; cursor: pointer;" onclick="showServerDetails(${server.id})" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(88, 101, 242, 0.3)'" onmouseout="this.style.borderColor='var(--border-color)'; this.style.boxShadow='none'">
+                    <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-md);">
+                        <div style="width: 64px; height: 64px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;">
+                            ${server.icon}
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <h4 style="margin: 0; margin-bottom: 4px;">${server.name}</h4>
+                            <p style="margin: 0; color: var(--text-tertiary); font-size: 0.85rem;">${server.members.toLocaleString()} members</p>
+                        </div>
+                        ${server.trending ? '<i class="fas fa-fire" style="color: var(--warning); font-size: 1.2rem;"></i>' : ''}
+                    </div>
+                    <p style="margin: 0 0 var(--spacing-md); color: var(--text-secondary); font-size: 0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        ${server.description}
+                    </p>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-tertiary);">
+                        <span><i class="fas fa-hashtag"></i> ${server.channels} channels</span>
+                        <span><i class="fas fa-users"></i> ${server.members} members</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Show server details
+        function showServerDetails(serverId) {
+            const server = servers.find(s => s.id === serverId);
+            if (server) {
+                document.getElementById('modalServerName').textContent = server.name;
+                document.getElementById('modalServerIcon').textContent = server.icon;
+                document.getElementById('modalServerDesc').textContent = server.description;
+                document.getElementById('modalMemberCount').textContent = (server.members / 1000).toFixed(1) + 'K';
+                document.getElementById('modalChannelCount').textContent = server.channels;
+                document.getElementById('modalOwner').textContent = server.owner;
+                document.getElementById('modalCategory').textContent = server.category.charAt(0).toUpperCase() + server.category.slice(1);
+                document.getElementById('serverModal').classList.add('active');
+            }
+        }
+
+        // Join server
+        function joinServer() {
+            alert('You successfully joined the server!');
+            closeModal('serverModal');
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Load servers
+        function loadServers() {
+            const featured = servers.filter(s => s.featured);
+            const trending = servers.filter(s => s.trending);
+            const recommended = servers.slice(0, 3);
+
+            document.getElementById('featuredServers').innerHTML = featured.map(createServerCard).join('');
+            document.getElementById('trendingServers').innerHTML = trending.map(createServerCard).join('');
+            document.getElementById('recommendedServers').innerHTML = recommended.map(createServerCard).join('');
+        }
+
+        // Theme functionality
+        document.getElementById('themeBtn').addEventListener('click', () => {
+            document.getElementById('themeModal').classList.add('active');
+            populateThemeGrid();
+        });
+
+        function populateThemeGrid() {
+            const themeGrid = document.getElementById('themeGrid');
+            const themes = getAvailableThemes();
+            themeGrid.innerHTML = themes.map(theme => `
+                <button onclick="applyTheme('${theme.id}')" title="${theme.name}" style="padding: var(--spacing-md); background: var(--bg-secondary); border: 2px solid var(--border-color); border-radius: 6px; cursor: pointer; transition: all 0.3s ease; color: var(--text-primary);">
+                    <i class="fas fa-paint-brush"></i>
+                    <div style="font-size: 0.85rem; margin-top: 4px;">${theme.name}</div>
+                </button>
+            `).join('');
+        }
+
+        // Search servers
+        document.getElementById('serverSearch').addEventListener('input', (e) => {
+            const search = e.target.value.toLowerCase();
+            const filtered = servers.filter(s => s.name.toLowerCase().includes(search));
+            
+            if (filtered.length > 0) {
+                document.getElementById('featuredServers').innerHTML = filtered.map(createServerCard).join('');
+                document.getElementById('trendingServers').innerHTML = '';
+                document.getElementById('recommendedServers').innerHTML = '';
+            } else {
+                loadServers();
+            }
+        });
+
+        // Filter by category
+        document.getElementById('categoryFilter').addEventListener('change', (e) => {
+            const category = e.target.value;
+            const filtered = category ? servers.filter(s => s.category === category) : servers;
+            
+            document.getElementById('featuredServers').innerHTML = filtered.slice(0, 3).map(createServerCard).join('');
+            document.getElementById('trendingServers').innerHTML = filtered.slice(3, 6).map(createServerCard).join('');
+            document.getElementById('recommendedServers').innerHTML = '';
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            loadServers();
+            const savedTheme = localStorage.getItem('currentTheme') || 'discord';
+            applyTheme(savedTheme);
+        });
+
+        // Close modals on background click
+        document.getElementById('themeModal').addEventListener('click', (e) => {
+            if (e.target.id === 'themeModal') closeModal('themeModal');
+        });
+
+        document.getElementById('serverModal').addEventListener('click', (e) => {
+            if (e.target.id === 'serverModal') closeModal('serverModal');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: chathub
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+    staticSite: false
+    domains:
+      - name: chathub.render.com
+        type: subdomain
